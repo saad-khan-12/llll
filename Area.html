@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Metric Area Conversion</title>
+    <style>
+        /* Video Background */
+        video {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -1;
+        }
+
+        body {
+            font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            width: 80%;
+            max-width: 1200px;
+            padding: 20px;
+            text-align: center;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.5));
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-top: 50px;
+        }
+
+        h1 {
+            color: aqua;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            margin: 20px 0;
+            border-collapse: collapse;
+            text-align: left;
+            margin-bottom: 40px;
+        }
+
+        th, td {
+            padding: 12px;
+            border: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f1f1f1;
+        }
+
+        td {
+            background-color: #fff;
+        }
+
+        .converter {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .converter input, .converter select, .converter button {
+            padding: 12px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+
+        .converter button {
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+            border: none;
+        }
+
+        .converter button:hover {
+            background-color: #45a049;
+        }
+
+        .result {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #4CAF50;
+        }
+
+        .footer {
+            font-size: 14px;
+            color: #aaa;
+            margin-top: 40px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                width: 90%;
+            }
+
+            .converter {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .converter input,
+            .converter select,
+            .converter button {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Video Background -->
+    <div class="video-background">
+        <video autoplay muted loop id="background-video">
+            <source src="./video.mp4" type="video/mp4">
+        </video>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container">
+        <h1>Area Conversion</h1>
+
+        <!-- Metric Conversion Table -->
+        <table>
+            <thead>
+                <tr>
+                    <th>Conversion</th>
+                    <th>Factor</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Square Inches to Square Millimeters</td>
+                    <td>1 square inch = 645.16 square millimeters</td>
+                </tr>
+                <tr>
+                    <td>Square Feet to Square Meters</td>
+                    <td>1 square foot = 0.092903 square meters</td>
+                </tr>
+                <tr>
+                    <td>Acres to Hectares</td>
+                    <td>1 acre = 0.404686 hectares</td>
+                </tr>
+                <tr>
+                    <td>Square Miles to Square Kilometers</td>
+                    <td>1 square mile = 2.58999 square kilometers</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- Conversion Form -->
+        <div class="converter">
+            <input type="number" id="inputValue" placeholder="Enter value" />
+            <select id="fromUnit">
+                <option value="squareinches">Square Inches</option>
+                <option value="squarefeet">Square Feet</option>
+                <option value="acres">Acres</option>
+                <option value="squaremiles">Square Miles</option>
+            </select>
+            <span>to</span>
+            <select id="toUnit">
+                <option value="squaremillimeters">Square Millimeters</option>
+                <option value="squaremeters">Square Meters</option>
+                <option value="hectares">Hectares</option>
+                <option value="squarekilometers">Square Kilometers</option>
+            </select>
+            <button onclick="convert()">Convert</button>
+        </div>
+
+        <!-- Result Section -->
+        <div class="result" id="result"></div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        // Conversion factors for areas
+        const conversionFactors = {
+            squareinches: {
+                squaremillimeters: 645.16
+            },
+            squarefeet: {
+                squaremeters: 0.092903
+            },
+            acres: {
+                hectares: 0.404686
+            },
+            squaremiles: {
+                squarekilometers: 2.58999
+            }
+        };
+
+        // Conversion function
+        function convert() {
+            // Get input values
+            let value = parseFloat(document.getElementById('inputValue').value);
+            let fromUnit = document.getElementById('fromUnit').value;
+            let toUnit = document.getElementById('toUnit').value;
+            
+            // Check for valid input
+            if (isNaN(value) || value <= 0) {
+                alert('Please enter a valid number greater than zero');
+                return;
+            }
+            
+            let result = 0;
+
+            // Perform conversion based on selected units
+            if (conversionFactors[fromUnit] && conversionFactors[fromUnit][toUnit]) {
+                result = value * conversionFactors[fromUnit][toUnit];
+            } else {
+                alert('Invalid conversion combination');
+                return;
+            }
+
+            // Display result
+            document.getElementById('result').innerText = `Result: ${value} ${fromUnit} = ${result.toFixed(4)} ${toUnit}`;
+        }
+    </script>
+</body>
+</html>
